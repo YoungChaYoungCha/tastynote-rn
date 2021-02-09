@@ -77,11 +77,20 @@ export default function Intro({navigation}) {
         />
       </InputContainer>
       <ButtonContainer>
-        <FancyButton background="#F13005">
+        <FancyButton
+          background="#F13005"
+          onPress={() => {
+            //로그인 성공 시
+            navigation.navigate('Home');
+          }}>
           <ButtonText>로그인</ButtonText>
         </FancyButton>
         <Space size="20px" />
-        <FancyButton background="#5EDD4A">
+        <FancyButton
+          background="#5EDD4A"
+          onPress={() => {
+            navigation.navigate('SignUp');
+          }}>
           <ButtonText>회원가입</ButtonText>
         </FancyButton>
       </ButtonContainer>
