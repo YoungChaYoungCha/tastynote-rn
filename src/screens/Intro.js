@@ -1,17 +1,90 @@
-import React from 'react';
+import React, {useState} from 'react';
+
 import {
   SafeAreaView,
   StyleSheet,
+  Dimensions,
   View,
   Text,
   TouchableOpacity,
   Image,
 } from 'react-native';
+import {TextInput} from 'react-native-paper';
+import styled from 'styled-components';
+import {
+  MainText,
+  SubText,
+  FancyButton,
+  ButtonText,
+  Space,
+} from '../components/reuseable/styles';
+var width = Dimensions.get('window').width;
+
+const Container = styled.View`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+`;
+const IntroContainer = styled.View`
+  flex: 1.5;
+  justify-content: center;
+  align-items: center;
+`;
+
+const InputContainer = styled.View`
+  flex: 0.5;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ButtonContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
+
+const styles = StyleSheet.create({
+  loginText: {
+    width: width * 0.8,
+    height: 50,
+    borderRadius: 8,
+  },
+});
 
 export default function Intro({navigation}) {
+  const [id, setId] = useState('');
+  const [password, setPassword] = useState('');
+
   return (
-    <View>
-      <Text>Intro</Text>
-    </View>
+    <Container>
+      <IntroContainer>
+        <MainText>Tasty Note</MainText>
+        <SubText>나만의 맛집 기록 다이어리</SubText>
+      </IntroContainer>
+      <InputContainer>
+        <TextInput
+          style={styles.loginText}
+          label="ID"
+          value={id}
+          onChangeText={(text) => setId(text)}
+        />
+        <Space size="20px" />
+        <TextInput
+          style={styles.loginText}
+          label="Password"
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+        />
+      </InputContainer>
+      <ButtonContainer>
+        <FancyButton background="#F13005">
+          <ButtonText>로그인</ButtonText>
+        </FancyButton>
+        <Space size="20px" />
+        <FancyButton background="#5EDD4A">
+          <ButtonText>회원가입</ButtonText>
+        </FancyButton>
+      </ButtonContainer>
+    </Container>
   );
 }
