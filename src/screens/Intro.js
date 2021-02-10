@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import {
   SafeAreaView,
@@ -54,7 +54,11 @@ const styles = StyleSheet.create({
 export default function Intro({navigation}) {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
-
+  const [isValid, setIsValid] = useState(false);
+  useEffect(() => {
+    if (id && password) setIsValid(true);
+    if (!id || !password) setIsValid(false);
+  }, [id, password]);
   return (
     <Container>
       <IntroContainer>
@@ -73,12 +77,15 @@ export default function Intro({navigation}) {
           style={styles.loginText}
           label="Password"
           value={password}
+          secureTextEntry={true}
           onChangeText={(text) => setPassword(text)}
         />
       </InputContainer>
       <ButtonContainer>
         <FancyButton
-          background="#F13005"
+          background={[241, 48, 5]}
+          disabled={isValid ? false : true}
+          isValid={isValid}
           onPress={() => {
             //로그인 성공 시
             navigation.navigate('Home');
@@ -87,7 +94,7 @@ export default function Intro({navigation}) {
         </FancyButton>
         <Space size="20px" />
         <FancyButton
-          background="#5EDD4A"
+          background={[94, 221, 74]}
           onPress={() => {
             navigation.navigate('SignUp');
           }}>

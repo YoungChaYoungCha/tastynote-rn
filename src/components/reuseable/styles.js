@@ -10,8 +10,9 @@ export const SubText = styled.Text`
 
 export const FancyButton = styled.TouchableOpacity`
   background-color: ${(props) =>
-    props.background ? props.background : 'white'};
-  opacity: 0.55;
+    `rgba(${props.background[0]}, ${props.background[1]}, ${
+      props.background[2]
+    }, ${props.isValid ? 1 : 0.55})}`};
   border-radius: 8;
   width: 80%;
   height: 70px;
