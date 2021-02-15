@@ -16,7 +16,7 @@ import {
   SubText,
   FancyButton,
   ButtonText,
-  Space,
+  SpaceCol,
 } from '../components/reuseable/styles';
 var width = Dimensions.get('window').width;
 
@@ -67,13 +67,15 @@ export default function Intro({navigation}) {
       </IntroContainer>
       <InputContainer>
         <TextInput
+          mode="outlined"
           style={styles.loginText}
           label="ID"
           value={id}
           onChangeText={(text) => setId(text)}
         />
-        <Space size="20px" />
+        <SpaceCol size="20px" />
         <TextInput
+          mode="outlined"
           style={styles.loginText}
           label="Password"
           value={password}
@@ -92,9 +94,10 @@ export default function Intro({navigation}) {
           }}>
           <ButtonText>로그인</ButtonText>
         </FancyButton>
-        <Space size="20px" />
+        <SpaceCol size="20px" />
         <FancyButton
-          background={[94, 221, 74]}
+          background={[30, 250, 50]}
+          isValid={true}
           onPress={() => {
             navigation.navigate('SignUp');
           }}>

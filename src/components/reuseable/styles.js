@@ -12,7 +12,7 @@ export const FancyButton = styled.TouchableOpacity`
   background-color: ${(props) =>
     `rgba(${props.background[0]}, ${props.background[1]}, ${
       props.background[2]
-    }, ${props.isValid ? 1 : 0.55})}`};
+    }, ${props.isValid ? 1 : 0.3})}`};
   border-radius: 8;
   width: 80%;
   height: 70px;
@@ -24,8 +24,12 @@ export const ButtonText = styled.Text`
   color: white;
 `;
 
-export const Space = styled.View`
+export const SpaceCol = styled.View`
   margin-top: ${(props) => props.size};
+`;
+
+export const SpaceRow = styled.View`
+  margin-left: ${(props) => props.size};
 `;
 
 export const FlexBox = styled.View`
