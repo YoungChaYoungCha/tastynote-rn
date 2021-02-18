@@ -1,17 +1,20 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback, Fragment} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
+import {registerUserInfo} from '../modules/userInfo';
 import {
   SafeAreaView,
   StyleSheet,
   View,
   Text,
-  TouchableOpacity,
-  Image,
   Dimensions,
+  ToastAndroid,
+  Platform,
+  AlertIOS,
 } from 'react-native';
-import {Divider} from 'react-native-paper';
 import Header from '../components/Header';
 import Input from '../components/Input';
 import styled from 'styled-components';
+import Timer from '../components/reuseable/timer';
 import {
   MainText,
   SubText,
@@ -90,7 +93,27 @@ export default function SignUp({navigation}) {
   const [authCode, setAuthCode] = useState();
   const [inputAuthCode, setInputAuthCode] = useState();
   const [isCodeSubmit, setIsCodeSubmit] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
   const {userName, email, password} = userInfo;
+  const dispatch = useDispatch();
+
+  const _registerUserInfo = useCallback(
+    (_userInfo) => dispatch(registerUserInfo(_userInfo)),
+    [dispatch],
+  );
+
+  useEffect(() => {
+    if (password && checkPassword === password) {
+      setIsSamePassword(true);
+    } else {
+      setIsSamePassword(false);
+    }
+  }, [password, checkPassword]);
+
+  useEffect(() => {
+    if (!!isComplete) _registerUserInfo(userInfo);
+  }, [isComplete]);
 
   const onChange = (name, value) => {
     setUserInfo({
@@ -99,13 +122,15 @@ export default function SignUp({navigation}) {
     });
   };
 
-  useEffect(() => {
-    if (password && checkPassword === password) {
-      setIsSamePassword(true);
-    } else {
-      setIsSamePassword(false);
-    }
-  }, [password]);
+  const notifyMessage = (msg) => {
+    if (Platform.OS === 'android')
+      ToastAndroid.showWithGravity(
+        msg,
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
+    else AlertIOS.alert(msg);
+  };
 
   return (
     <Container>
@@ -186,6 +211,7 @@ export default function SignUp({navigation}) {
             setIsCodeSubmit(true);
           }}>
           <ButtonText>{isCodeSubmit ? '재전송' : '코드 전송'}</ButtonText>
+          {/* <Timer n={3} /> */}
         </FancyButton>
         <SpaceCol size="10px" />
         {authCode ? (
@@ -197,16 +223,30 @@ export default function SignUp({navigation}) {
               width={width * 0.8}
             />
             <SpaceCol size="15px" />
-
             <FancyButton
               style={{width: width * 0.8, height: 50}}
               background={[30, 250, 50]}
+              disabled={!inputAuthCode}
+              isValid={isAuth || inputAuthCode}
               onPress={() => {
-                if (authCode == inputAuthCode) {
-                  navigation.navigate('Home');
+                if (isAuth) {
+                  if (userName && isSamePassword) {
+                    setIsComplete(true);
+                    navigation.navigate('Home');
+                  } else if (!userName) {
+                    notifyMessage('이름을 입력해주세요.');
+                  } else if (!isSamePassword || !password) {
+                    notifyMessage('잘못된 비밀번호입니다.');
+                  }
                 }
+                if (!isAuth && authCode == inputAuthCode) {
+                  notifyMessage('인증이 완료되었습니다.');
+                  onChange('email', emailHost + '@' + emailDomain);
+                  setIsAuth(true);
+                } else if (!isAuth && authCode != inputAuthCode)
+                  notifyMessage('잘못된 인증번호입니다.');
               }}>
-              <ButtonText>인증하기</ButtonText>
+              <ButtonText>{isAuth ? '가입완료' : '인증하기'}</ButtonText>
             </FancyButton>
           </>
         ) : null}
